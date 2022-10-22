@@ -5,6 +5,18 @@ SPACE	:= $(EMPTY) $(EMPTY)  #zyk 这样定义空格
 SLASH	:= /                  #zyk slash:斜杠
 
 V       := @                  #zyk 可以在这里修改V的定义来决定是否启动回声
+# zyk看到了另外一种决定是否启动回声的方法，在执行make命令时时，可以写 make V=1,然后在makefile中这样写:
+# ifen ($(V),1)
+# V=@
+# else
+# V=
+# endif
+# 参考 https://www.cnblogs.com/ym65536/p/4254578.html
+
+
+
+
+# zyk：自动使用某一版本的编译工具。首先判断i386-elf-objdump在不在，然后判断objdump
 #need llvm/cang-3.5+
 #USELLVM := 1
 # try to infer the correct GCCPREFX
@@ -24,6 +36,8 @@ GCCPREFIX := $(shell if i386-elf-objdump -i 2>&1 | grep '^elf32-i386$$' >/dev/nu
 	echo "***" 1>&2; exit 1; fi)
 endif
 
+
+# zyk 自动推断正确的QEMU版本
 # try to infer the correct QEMU
 # The result is `QEMU := qemu-system-i386`
 ifndef QEMU
@@ -40,6 +54,7 @@ QEMU := $(shell if which qemu-system-i386 > /dev/null; \
 	echo "***" 1>&2; exit 1; fi)
 endif
 
+# zyk 指定后缀规则的后缀列表，但是这里没有删去原列表，仅仅添加了几个原来就有的后缀
 # eliminate default suffix rules
 # 默认的后缀列表是:.out, .a, .ln, .o, .c, .cc, .C, .p,
 # .f, .F, .r, .y, .l, .s, .S, .mod, .sym, .def, .h, 
@@ -47,8 +62,10 @@ endif
 # .txinfo, .w, .ch .web, .sh, .elc, .el
 .SUFFIXES: .c .S .h
 
+# zyk 如果规则的命令运行错误，产出修改了的目标文件
 # delete target files if there is an error (or make is interrupted)
 .DELETE_ON_ERROR:
+
 
 # define compiler and flags
 ifndef  USELLVM
