@@ -67,13 +67,14 @@ endif
 .DELETE_ON_ERROR:
 
 
+# zyk 编译选项
 # define compiler and flags
 ifndef  USELLVM
 HOSTCC		:= gcc
-HOSTCFLAGS	:= -g -Wall -O2
+HOSTCFLAGS	:= -g -Wall -O2  # zyk 调试信息、编译警告信息、进一步优化
 CC		:= $(GCCPREFIX)gcc
-CFLAGS	:= -fno-builtin -Wall -ggdb -m32 -gstabs -nostdinc $(DEFS)
-CFLAGS	+= $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
+CFLAGS	:= -fno-builtin -Wall -ggdb -m32 -gstabs -nostdinc $(DEFS)   # zyk 不适用c內建函数、编译为32位程序、不使用系统头文件
+CFLAGS	+= $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector) # zyk 不启用栈保护
 else
 HOSTCC		:= clang
 HOSTCFLAGS	:= -g -Wall -O2
@@ -84,6 +85,7 @@ endif
 
 CTYPE	:= c S
 
+# zyk 链接器选项
 LD      := $(GCCPREFIX)ld
 # The result is `LDFLAGS := -m elf_i386`
 LDFLAGS	:= -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
