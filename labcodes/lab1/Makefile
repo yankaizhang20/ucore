@@ -1,9 +1,10 @@
+#zyk 一些字符文本变量定义
 PROJ	:= challenge
 EMPTY	:=
-SPACE	:= $(EMPTY) $(EMPTY)
-SLASH	:= /
+SPACE	:= $(EMPTY) $(EMPTY)  #zyk 这样定义空格
+SLASH	:= /                  #zyk slash:斜杠
 
-V       := @
+V       := @                  #zyk 可以在这里修改V的定义来决定是否启动回声
 #need llvm/cang-3.5+
 #USELLVM := 1
 # try to infer the correct GCCPREFX
