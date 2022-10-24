@@ -94,6 +94,8 @@ LDFLAGS	+= -nostdlib
 OBJCOPY := $(GCCPREFIX)objcopy
 OBJDUMP := $(GCCPREFIX)objdump
 
+
+# zyk 这里为什么要对这些shell命令重命名呢？
 COPY	:= cp
 MKDIR   := mkdir -p
 MV		:= mv

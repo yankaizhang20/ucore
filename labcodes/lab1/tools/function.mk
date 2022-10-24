@@ -2,7 +2,7 @@ OBJPREFIX	:= __objs_
 
 .SECONDEXPANSION:
 # -------------------- function begin --------------------
-
+# zyk 定义函数，找到某个目录下的指定类型的文件
 # list all files in some directories: (#directories, #types)
 # $(2) = c S
 # $(addprefix %.,$(2)) = %.c %.S
@@ -13,6 +13,7 @@ OBJPREFIX	:= __objs_
 listf = $(filter $(if $(2),$(addprefix %.,$(2)),%),\
 		  $(wildcard $(addsuffix $(SLASH)*,$(1))))
 
+# zyk 组合某个目标文件的绝对路径
 # get .o obj files: (#files[, packet])
 # 确定obj的绝对路径： $(OBJDIR)/$(2)/$(1).o
 toobj = $(addprefix $(OBJDIR)$(SLASH)$(if $(2),$(2)$(SLASH)),\
@@ -22,6 +23,7 @@ toobj = $(addprefix $(OBJDIR)$(SLASH)$(if $(2),$(2)$(SLASH)),\
 # 结果为： $(OBJDIR)/$(2)/$(1).d
 todep = $(patsubst %.o,%.d,$(call toobj,$(1),$(2)))
 
+# zyk 生成二进制文件的绝对路径
 totarget = $(addprefix $(BINDIR)$(SLASH),$(1))
 
 # change $(name) to $(OBJPREFIX)$(name): (#names)
