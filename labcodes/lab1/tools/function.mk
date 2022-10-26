@@ -51,6 +51,8 @@ endef
 define do_cc_compile
 $$(foreach f,$(1),$$(eval $$(call cc_template,$$(f),$(2),$(3),$(4))))
 endef
+# 
+
 
 # add files to packet: (#files, cc[, flags, packet, dir])
 define do_add_files_to_packet
@@ -95,6 +97,16 @@ endef
 # --------------------  function end  --------------------
 # compile file: (#files, cc[, flags, dir])
 cc_compile = $(eval $(call do_cc_compile,$(1),$(2),$(3),$(4)))
+# zyk 展开过程如下：
+# 第一步 do_cc_compile 展开为  $(foreach f,$(1),$(eval $(call cc_template,$(f),$(2),$(3),$(4))))
+# 第二步 cc_template展开为：
+#$(call todep,$(1),$(4)): $(1) | $$(dir $$@)
+#	@$(2) -I$(dir $(1)) $(3) -MM $< -MT "$(patsubst %.d,%.o,$@) $@"> $@
+#$(call toobj,$(1),$(4)): $(1) | $$(dir $$@)
+#	@echo + cc $<
+#	$(V)$(2) -I$(dir $(1)) $(3) -c $< -o $@
+#ALLOBJS += $(call toobj,$(1),$(4))
+
 
 # add files to packet: (#files, cc[, flags, packet, dir])
 add_files = $(eval $(call do_add_files_to_packet,$(1),$(2),$(3),$(4),$(5)))

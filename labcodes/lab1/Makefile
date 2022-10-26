@@ -113,6 +113,7 @@ ALLOBJS	:=
 ALLDEPS	:=
 TARGETS	:=
 
+# zyk 一些函数定义
 include tools/function.mk
 
 # $(1)目录下，满足`%.c %.S`的文件
@@ -135,6 +136,7 @@ symfile = $(call cgtype,$(call toobj,$(1)),o,sym)
 # for match pattern
 match = $(shell echo $(2) | $(AWK) '{for(i=1;i<=NF;i++){if(match("$(1)","^"$$(i)"$$")){exit 1;}}}'; echo $$?)
 
+# zyk 下面是正式开始创建目标
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # include kernel/user
 
@@ -144,6 +146,7 @@ CFLAGS	+= $(addprefix -I,$(INCLUDE))
 
 LIBDIR	+= libs
 
+# zyk 编译libs下的c文件，目标文件放到obj目录下，
 $(call add_files_cc,$(call listf_cc,$(LIBDIR)),libs,)
 
 # -------------------------------------------------------------------
@@ -163,6 +166,7 @@ KSRCDIR		+= kern/init \
 
 KCFLAGS		+= $(addprefix -I,$(KINCLUDE))
 
+# zyk 编译kern文件夹的.c文件
 $(call add_files_cc,$(call listf_cc,$(KSRCDIR)),kernel,$(KCFLAGS))
 
 KOBJS	= $(call read_packet,kernel libs)
