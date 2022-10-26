@@ -1,10 +1,12 @@
 #zyk 一些字符文本变量定义
 PROJ	:= challenge
 EMPTY	:=
-SPACE	:= $(EMPTY) $(EMPTY)  #zyk 这样定义空格
-SLASH	:= /                  #zyk slash:斜杠
-
-V       := @                  #zyk 可以在这里修改V的定义来决定是否启动回声
+#zyk 这样定义空格
+SPACE	:= $(EMPTY) $(EMPTY)
+#zyk slash:斜杠
+SLASH	:= /
+#zyk 可以在这里修改V的定义来决定是否启动回声
+V       := @
 # zyk看到了另外一种决定是否启动回声的方法，在执行make命令时时，可以写 make V=1,然后在makefile中这样写:
 # ifen ($(V),1)
 # V=@
