@@ -7,6 +7,8 @@ SPACE	:= $(EMPTY) $(EMPTY)
 SLASH	:= /
 #zyk 可以在这里修改V的定义来决定是否启动回声
 V       := @
+#zyk makefile测试信息
+DEBUG := 1
 # zyk看到了另外一种决定是否启动回声的方法，在执行make命令时时，可以写 make V=1,然后在makefile中这样写:
 # ifen ($(V),1)
 # V=@
@@ -171,9 +173,15 @@ KCFLAGS		+= $(addprefix -I,$(KINCLUDE))
 # zyk 编译kern文件夹的.c文件
 $(call add_files_cc,$(call listf_cc,$(KSRCDIR)),kernel,$(KCFLAGS))
 
+# zyk KOBJS获得lib和kernel的.o文件名
 KOBJS	= $(call read_packet,kernel libs)
 
+ifeq ($(DEBUG),1)
+$(call read_packet_debug,kernel)
+endif
+
 # create kernel target
+# zyk 仅仅加了路径
 kernel = $(call totarget,kernel)
 
 $(kernel): tools/kernel.ld
@@ -184,6 +192,13 @@ $(kernel): $(KOBJS)
 	@$(OBJDUMP) -S $@ > $(call asmfile,kernel)
 	@$(OBJDUMP) -t $@ | $(SED) '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(call symfile,kernel)
 
+ifeq ($(DEBUG),1)
+$(info kernel链接指令：)
+$(info $(V)$(LD) $(LDFLAGS) -T tools/kernel.ld -o $@ $(KOBJS))
+$(info OBJDUMP为$(OBJDUMP))
+endif
+
+# zyk 就是将目标加入到TARGETS这个变量内
 $(call create_target,kernel)
 
 # -------------------------------------------------------------------

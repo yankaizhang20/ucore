@@ -63,6 +63,12 @@ endif
 __temp_objs__ := $(call toobj,$(1),$(5))
 $$(foreach f,$(1),$$(eval $$(call cc_template,$$(f),$(2),$(3),$(5))))
 $$(__temp_packet__) += $$(__temp_objs__)
+
+ifeq ($$(DEBUG),1)
+$$(info packet:$(4))
+$$(info $$(value $$(__temp_packet__)))
+endif
+
 endef
 
 # add objs to packet: (#objs, packet)
@@ -78,6 +84,7 @@ endef
 define do_create_target
 __temp_target__ = $(call totarget,$(1))
 __temp_objs__ = $$(foreach p,$(call packetname,$(2)),$$($$(p))) $(3)
+
 TARGETS += $$(__temp_target__)
 ifneq ($(4),)
 $$(__temp_target__): $$(__temp_objs__) | $$$$(dir $$$$@)
@@ -85,6 +92,13 @@ $$(__temp_target__): $$(__temp_objs__) | $$$$(dir $$$$@)
 else
 $$(__temp_target__): $$(__temp_objs__) | $$$$(dir $$$$@)
 endif
+
+ifeq ($$(DEBUG),1)
+$$(info create_target target=$(1))
+# $$(foreach p,$(call packetname,$(2)),$$(info $$$$($$$$(p))=$$($$(p))))
+$$(info __temp__objs=$$(__temp_objs__),__temp_target__=$$(__temp_target__))
+endif
+
 endef
 
 # finish all
@@ -118,6 +132,8 @@ add_objs = $(eval $(call do_add_objs_to_packet,$(1),$(2)))
 create_target = $(eval $(call do_create_target,$(1),$(2),$(3),$(4),$(5)))
 
 read_packet = $(foreach p,$(call packetname,$(1)),$($(p)))
+#zyk 
+read_packet_debug=$(foreach p,$(call packetname,$(1)),$(info $$(p):$(p),$$($$(p))=$($(p))))
 
 add_dependency = $(eval $(1): $(2))
 
