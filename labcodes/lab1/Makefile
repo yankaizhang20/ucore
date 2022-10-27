@@ -8,7 +8,7 @@ SLASH	:= /
 #zyk 可以在这里修改V的定义来决定是否启动回声
 V       := @
 #zyk makefile测试信息
-DEBUG := 1
+DEBUG := 
 # zyk看到了另外一种决定是否启动回声的方法，在执行make命令时时，可以写 make V=1,然后在makefile中这样写:
 # ifen ($(V),1)
 # V=@
@@ -210,7 +210,7 @@ bootfiles = $(call listf_cc,boot)
 $(foreach f,$(bootfiles),$(call cc_compile,$(f),$(CC),$(CFLAGS) -Os -nostdinc))
 
 bootblock = $(call totarget,bootblock)
-
+# zyk 链接bootblock，同时使用sign程序，生成启动扇区
 $(bootblock): $(call toobj,$(bootfiles)) | $(call totarget,sign)
 	@echo + ld $@
 	$(V)$(LD) $(LDFLAGS) -N -e start -Ttext 0x7C00 $^ -o $(call toobj,bootblock)
