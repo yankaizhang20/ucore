@@ -66,7 +66,7 @@ endif
 # .txinfo, .w, .ch .web, .sh, .elc, .el
 .SUFFIXES: .c .S .h
 
-# zyk 如果规则的命令运行错误，产出修改了的目标文件
+# zyk 如果规则的命令运行错误，删除修改了的目标文件
 # delete target files if there is an error (or make is interrupted)
 .DELETE_ON_ERROR:
 
@@ -110,6 +110,7 @@ SH		:= sh
 TR		:= tr
 TOUCH	:= touch -c
 
+# zyk make过程紧紧依靠这几个变量
 OBJDIR	:= obj
 BINDIR	:= bin
 
@@ -138,6 +139,7 @@ outfile = $(call cgtype,$(call toobj,$(1)),o,out)
 symfile = $(call cgtype,$(call toobj,$(1)),o,sym)
 
 # for match pattern
+# zyk 查询$(1)是否以单词形式出现在$(2)中  ^$(i)$为正则表达式
 match = $(shell echo $(2) | $(AWK) '{for(i=1;i<=NF;i++){if(match("$(1)","^"$$(i)"$$")){exit 1;}}}'; echo $$?)
 
 # zyk 下面是正式开始创建目标
@@ -150,7 +152,7 @@ CFLAGS	+= $(addprefix -I,$(INCLUDE))
 
 LIBDIR	+= libs
 
-# zyk 编译libs下的c文件，目标文件放到obj目录下，
+# zyk 编译libs下的c文件，目标文件放到obj目录下，主要是.o文件和依赖信息文件.d
 $(call add_files_cc,$(call listf_cc,$(LIBDIR)),libs,)
 
 # -------------------------------------------------------------------
@@ -237,7 +239,7 @@ $(UCOREIMG): $(kernel) $(bootblock)
 $(call create_target,ucore.img)
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+# zyk 创建所有目录
 $(call finish_all)
 
 IGNORE_ALLDEPS	= clean \
@@ -247,6 +249,7 @@ IGNORE_ALLDEPS	= clean \
 				  print-.+ \
 				  handin
 
+# zyk 如果不是make上面那些伪目标，则添加ALLDEPS中的目标，这些目标是在编译.c文件时生成的.c文件的依赖信息
 ifeq ($(call match,$(MAKECMDGOALS),$(IGNORE_ALLDEPS)),0)
 -include $(ALLDEPS)
 endif
