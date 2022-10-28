@@ -48,7 +48,7 @@ seta20.2:
     #   因此孔断选择符的逻辑地址会被认为是无效的，从而引起一个处理器异常。GDT表项
     #   最大数目是8191个，即2^13 - 1.
     # Switch from real to protected mode, using a bootstrap GDT
-    # and segment translation that makes virtual addresses
+    # and segment translation that makes virtual add+resses
     # identical to physical addresses, so that the
     # effective memory map does not change during the switch.
     lgdt gdtdesc
