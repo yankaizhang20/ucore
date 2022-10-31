@@ -27,6 +27,8 @@ start:
     #  address line 20 is tied low, so that addresses higher than
     #  1MB wrap around to zero by default. This code undoes this.
 
+# seta20.1和seta20.2为打开 A20gate 操作
+# seta20.1 向64h端口发送写命令
 seta20.1:
     inb $0x64, %al                                  # Wait for not busy(8042 input buffer empty).
     testb $0x2, %al                                 # 如果 %al 第低2位为1，则ZF = 0, 则跳转
@@ -35,6 +37,7 @@ seta20.1:
     movb $0xd1, %al                                 # 0xd1 -> port 0x64
     outb %al, $0x64                                 # 0xd1 means: write data to 8042's P2 port
 
+# seta20.2 向60h端口发送写数据，主要是将第1置1
 seta20.2:
     inb $0x64, %al                                  # Wait for not busy(8042 input buffer empty).
     testb $0x2, %al
