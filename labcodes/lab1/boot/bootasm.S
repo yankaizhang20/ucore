@@ -37,7 +37,7 @@ seta20.1:
     movb $0xd1, %al                                 # 0xd1 -> port 0x64
     outb %al, $0x64                                 # 0xd1 means: write data to 8042's P2 port
 
-# seta20.2 向60h端口发送写数据，主要是将第1置1
+# seta20.2 向60h端口发送写数据，主要是将位1置1
 seta20.2:
     inb $0x64, %al                                  # Wait for not busy(8042 input buffer empty).
     testb $0x2, %al
