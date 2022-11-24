@@ -57,6 +57,7 @@ readsect(void *dst, uint32_t secno) {
     waitdisk();
 
     // read a sector
+    //@zyk:insl一次读取4个字节，所以读取次数cnt为SECTSIZE / 4
     insl(0x1F0, dst, SECTSIZE / 4);
 }
 
@@ -72,6 +73,7 @@ readseg(uintptr_t va, uint32_t count, uint32_t offset) {
     va -= offset % SECTSIZE;
 
     // translate from bytes to sectors; kernel starts at sector 1
+    //@zyk the first sector in disk(ucore.img) is bootloader(bootasm.S and bootmian.c)
     uint32_t secno = (offset / SECTSIZE) + 1;
 
     // If this is too slow, we could read lots of sectors at a time.
@@ -83,9 +85,10 @@ readseg(uintptr_t va, uint32_t count, uint32_t offset) {
 }
 
 /* bootmain - the entry of bootloader */
-void
+//@zyk: read the kernel elf head from disk,then load all program segments from diskis this a valid ELF?
 bootmain(void) {
     // read the 1st page off disk
+    //@zyk:offset of the first program segment is 0x1000(4KB),so the 1st page includes the program headers
     readseg((uintptr_t)ELFHDR, SECTSIZE * 8, 0);
 
     // is this a valid ELF?
@@ -96,6 +99,7 @@ bootmain(void) {
     struct proghdr *ph, *eph;
 
     // load each program segment (ignores ph flags)
+    //@zyk:entrys in program headers,not segment itself
     ph = (struct proghdr *)((uintptr_t)ELFHDR + ELFHDR->e_phoff);
     eph = ph + ELFHDR->e_phnum;
     for (; ph < eph; ph ++) {
@@ -104,6 +108,7 @@ bootmain(void) {
 
     // call the entry point from the ELF header
     // note: does not return
+    //@zyk:the entry point address is the same as the address of .text section and the address of code segment
     ((void (*)(void))(ELFHDR->e_entry & 0xFFFFFF))();
 
 bad:
