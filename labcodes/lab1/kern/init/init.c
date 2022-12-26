@@ -15,8 +15,8 @@ static void lab1_switch_test(void);
 
 int
 kern_init(void) {
-    extern char edata[], end[];
-    memset(edata, 0, end - edata);
+    extern char edata[], end[];     //@zyk:edata和end在kernel.ld中定义
+    memset(edata, 0, end - edata);     //@zyk:初始化数据段
 
     cons_init();                // init the console
 
